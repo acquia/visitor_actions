@@ -1,0 +1,9 @@
+name = Visitor Actions UI
+description = The User Interface for the Visitor Actions module.
+
+dependencies[] = menu
+dependencies[] = visitor_actions
+dependencies[] = libraries
+
+package = Visitor Actions
+core = 7.x

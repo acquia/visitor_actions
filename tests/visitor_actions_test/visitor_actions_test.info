@@ -1,0 +1,6 @@
+name = Visitor Actions Test
+description = Module for testing base Visitor Actions functionality.
+dependencies[] = visitor_actions
+package = Testing
+core = 7.x
+hidden = TRUE

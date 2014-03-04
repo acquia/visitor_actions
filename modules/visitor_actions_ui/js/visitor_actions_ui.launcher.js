@@ -103,7 +103,7 @@ Drupal.behaviors.visitorActionsEditorLauncher = {
         });
       });
 
-      // Allow other modules to shut down in-place visitor action defintion.
+      // Allow other modules to shut down in-place visitor action definition.
       $(document).bind('visitorActionsUIShutdown', function (event) {
         var appView = getAppView();
         if (appView) {

@@ -460,10 +460,6 @@ Drupal.visitorActions.ui = {
        */
       Drupal.ajax.prototype.commands.visitor_actions_ui_dismiss = function (ajax, response, status) {
         Drupal.ajax.prototype.commands.visitor_actions_ui_dismiss = null;
-        // Give the insert command back.
-        Drupal.ajax.prototype.commands.insert = insert;
-        // And remove our reference to it so it it'll be GC'ed.
-        insert = null;
         // Clean up the Drupal.ajax object reference for this element.
         Drupal.ajax[that.anchor.id] = null;
         that.model.set('active', false);
@@ -575,7 +571,6 @@ Drupal.visitorActions.ui = {
         }
         // Put the original insert command back.
         Drupal.ajax.prototype.commands.insert = insert;
-        insert = null;
       }
 
       // Perform an AJAX request to get the add action form.

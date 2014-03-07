@@ -254,7 +254,7 @@ function visitor_actions_ui_library_alter(&$libraries, $module) {
 function visitor_actions_ui_libraries_info() {
   $libraries['underscore'] = array(
     'name' => 'Underscore',
-    'vendor url' => 'http://documentcloud.github.io/backbone/',
+    'vendor url' => 'http://underscorejs.org/',
     'download url' => 'https://github.com/jashkenas/underscore/archive/1.5.2.zip',
     'version callback' => '_visitor_actions_ui_libraries_get_version',
     'variant order' => array('minified', 'source'),

@@ -211,17 +211,24 @@ function visitor_actions_get_form_options($actionable_element, &$form, $needs_st
     foreach ($options as $name => $element) {
       $form['options'][$actionable_element][$name] = $element;
       if ($needs_states) {
+        $states = $visible_state;
+        // Add element visible states to any existing states for this option.
         if (isset($form['options'][$actionable_element][$name]['#states'])) {
-          $states = array_merge($visible_state, $form['options'][$actionable_element][$name]['#states']);
+          foreach($form['options'][$actionable_element][$name]['#states'] as $property => $state) {
+            $states[$property] = isset($states[$property]) ? array_merge($states[$property], $state) : $state;
+          }
         }
         else {
           $states = $visible_state;
         }
-        $form['options'][$actionable_element][$name]['#states'] = $states;
         if (isset($element['#required'])) {
-          $form['options'][$actionable_element][$name]['#states'] += $required_state;
+          // Add element required state to any existing states for the option.
+          foreach($required_state as $property => $state) {
+           $states[$property] = isset($states[$property]) ? array_merge($states[$property], $state) : $state;
+          }
           unset($form['options'][$actionable_element][$name]['#required']);
         }
+        $form['options'][$actionable_element][$name]['#states'] = $states;
       }
     }
     // Add default values if we're editing an action of this type.

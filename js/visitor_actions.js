@@ -234,13 +234,38 @@
       var formId = action.identifier.replace(/_/g, '-');
       var $selector = $('form#' + formId, context);
       var pageContext = Drupal.visitorActions.getPageContext();
+      if ($selector.length == 0 || typeof callback !== 'function') {
+        return;
+      }
       if (action.event === 'submit_client') {
+        // If the selector is within a Drupal AJAX form then we have to
+        // work within the Drupal form processing.
+        for (var id in Drupal.settings.ajax) {
+          var ajaxed = Drupal.ajax[id];
+          if (typeof ajaxed !== 'undefined' && typeof ajaxed.form !== 'undefined' && ajaxed.form.length > 0) {
+            if (ajaxed.form[0] === $selector[0]) {
+              // Re-assign the eventResponse prototype method so that it can
+              // be called from the scope of the instance later.
+              ajaxed.drupalEventResponse = Drupal.ajax.prototype.eventResponse;
+              // Now use the eventResponse prototype to inject visitor actions
+              // callback prior to calling the Drupal event handler.
+              ajaxed.eventResponse = function(element, event) {
+                // Notify of this action.
+                callback.call(null, event, pageContext);
+                // Now invoke Drupal's event handling.
+                return this.drupalEventResponse(element, event);
+              };
+              return;
+            }
+          }
+        }
+
+        // Otherwise just bind to the form submit event for a regular client-
+        // side form submission.
         $selector
           .once('visitorActions-' + name)
           .bind('submit.' + eventNamespace, {'eventNamespace' : eventNamespace}, function (event) {
-            if (typeof callback === 'function') {
-              callback.call(null, event, pageContext);
-            }
+            callback.call(null, event, pageContext);
           });
       }
     }

@@ -105,7 +105,10 @@ function visitor_actions_user_insert(&$edit, $account, $category) {
  * Implements hook_form_alter().
  */
 function visitor_actions_form_alter(&$form, &$form_state, $form_id) {
-  // Put callback at the top of stack to be sure that it will be called
+  // Add the current url into form storage for page comparison.  This allows
+  // accurate comparisons even when the form is submitted via AJAX.
+  $form_state['storage']['visitor_actions']['internal_path'] = current_path();
+  // Put callback at the top of stack to be sure that it will be called.
   array_unshift($form['#submit'], 'visitor_actions_form_submit_callback');
 }
 
@@ -151,7 +154,7 @@ function visitor_actions_form_submit_callback($form, &$form_state) {
       if (empty($action['pages'])) {
         $trigger = TRUE;
       }
-      elseif (visitor_actions_match_page($action['pages'])) {
+      elseif (visitor_actions_match_page($action['pages'], $form_state['storage']['visitor_actions']['internal_path'])) {
         $trigger = TRUE;
       }
       if ($trigger) {
@@ -245,16 +248,18 @@ function visitor_actions_page_build(&$page) {
 
 /**
  * Returns whether the supplied list of pages includes a match for
- * the current page.
+ * the current comparison page.
  *
  * @param $pages
  *   String containing a set of pages separated by \n, \r or \r\n.
+ * @param string $compare_path
+ *   The internal page path for comparison if different than the current path.
  * @return bool
  *   Returns TRUE if the current path is matched, FALSE otherwise.
  */
-function visitor_actions_match_page($pages) {
+function visitor_actions_match_page($pages, $compare_path = NULL) {
   // Convert the Drupal path to lowercase
-  $path = drupal_strtolower(drupal_get_path_alias($_GET['q']));
+  $path = empty($compare_path) ? drupal_strtolower(drupal_get_path_alias($_GET['q'])) : $compare_path;
   // Compare the lowercase internal and lowercase path alias (if any).
   $page_match = drupal_match_path($path, $pages);
   if ($path != $_GET['q']) {

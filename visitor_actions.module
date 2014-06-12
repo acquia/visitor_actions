@@ -107,7 +107,7 @@ function visitor_actions_user_insert(&$edit, $account, $category) {
 function visitor_actions_form_alter(&$form, &$form_state, $form_id) {
   // Add the current url into form storage for page comparison.  This allows
   // accurate comparisons even when the form is submitted via AJAX.
-  $form_state['storage']['visitor_actions']['internal_path'] = current_path();
+  $form_state['visitor_actions']['internal_path'] = current_path();
   // Put callback at the top of stack to be sure that it will be called.
   array_unshift($form['#submit'], 'visitor_actions_form_submit_callback');
 }
@@ -154,7 +154,7 @@ function visitor_actions_form_submit_callback($form, &$form_state) {
       if (empty($action['pages'])) {
         $trigger = TRUE;
       }
-      elseif (visitor_actions_match_page($action['pages'], $form_state['storage']['visitor_actions']['internal_path'])) {
+      elseif (visitor_actions_match_page($action['pages'], $form_state['visitor_actions']['internal_path'])) {
         $trigger = TRUE;
       }
       if ($trigger) {

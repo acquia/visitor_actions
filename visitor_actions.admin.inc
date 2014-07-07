@@ -34,7 +34,7 @@ function visitor_actions_list() {
   );
   $rows = array();
 
-  foreach (visitor_actions_get_custom_actions() as $action) {
+  foreach (visitor_actions_custom_load_multiple() as $action) {
     $tablerow = array(
       array('data' => check_plain($action['label'])),
       array('data' => l(t('Edit'), 'admin/structure/visitor_actions/manage/'. $action['machine_name'] . '/edit')),

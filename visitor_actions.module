@@ -294,7 +294,7 @@ function visitor_actions_get_actions() {
       $actions += visitor_actions_get_rules();
     }
     // Get all custom actions from the database.
-    $actions += visitor_actions_get_custom_actions();
+    $actions += visitor_actions_custom_load_multiple();
   }
 
   return $actions;
@@ -346,13 +346,18 @@ function visitor_actions_visitor_actions_info() {
 /**
  * Retrieves all custom actions that have been set up.
  */
-function visitor_actions_get_custom_actions() {
+function visitor_actions_custom_load_multiple($names = array()) {
   $custom_actions = array();
-  $result = db_select('visitor_actions_actions', 'a')
-    ->fields('a')
-    ->execute();
-  foreach ($result as $record) {
-    $custom_actions[$record->machine_name] = visitor_actions_unpack_action($record);
+  ctools_include('export');
+  if (empty($names)) {
+    $defaults = ctools_export_load_object('visitor_actions_actions', 'all');
+  }
+  else {
+    $defaults = ctools_export_load_object('visitor_actions_actions', 'names', $names);
+  }
+
+  foreach ($defaults as $action_name => $action) {
+    $custom_actions[$action_name] = (array) $action;
   }
   return $custom_actions;
 }
@@ -367,13 +372,8 @@ function visitor_actions_get_custom_actions() {
  *   An array representing the action or NULL if none was found.
  */
 function visitor_actions_custom_load($name) {
-  $result = db_select('visitor_actions_actions', 'a')
-    ->fields('a')
-    ->condition('machine_name', $name)
-    ->execute();
-  if ($record = $result->fetchObject()) {
-    return visitor_actions_unpack_action($record);
-  }
+  $actions = visitor_actions_custom_load_multiple(array($name));
+  return isset($actions[$name]) ? $actions[$name] : NULL;
 }
 
 /**

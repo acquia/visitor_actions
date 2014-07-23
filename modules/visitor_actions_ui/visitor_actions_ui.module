@@ -183,6 +183,21 @@ function visitor_actions_ui_library() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'jquery.once'),
+      array('visitor_actions_ui', 'ui.element_dialog'),
+      array('visitor_actions_ui', 'underscore'),
+      array('visitor_actions_ui', 'backbone'),
+    ),
+  );
+
+  $libraries['ui.element_dialog'] = array(
+    'title' => 'A dialog solution that is anchored to a DOM element',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/visitor_actions_ui.dialog.js' => $options,
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'jquery.once'),
       array('system', 'jquery.form'),
       array('system', 'drupal.form'),
       array('system', 'drupal.ajax'),

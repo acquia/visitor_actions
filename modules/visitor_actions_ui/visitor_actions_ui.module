@@ -184,6 +184,7 @@ function visitor_actions_ui_library() {
       array('system', 'jquery'),
       array('system', 'jquery.once'),
       array('visitor_actions_ui', 'ui.element_dialog'),
+      array('visitor_actions_ui', 'utilities.element_selector'),
       array('visitor_actions_ui', 'underscore'),
       array('visitor_actions_ui', 'backbone'),
     ),
@@ -217,6 +218,17 @@ function visitor_actions_ui_library() {
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'ui.position'),
+    ),
+  );
+
+  $libraries['utilities.element_selector'] = array(
+    'title' => 'Utility to generate the selector for an element',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/visitor_actions_ui.selector.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
     ),
   );
 

@@ -204,7 +204,7 @@
     },
 
     /**
-     * Uses the jQuery.ui.position() mehtod to position the dialog.
+     * Uses the jQuery.ui.position() method to position the dialog.
      *
      * @param function callback
      *   (optional) A function to invoke after positioning has finished.

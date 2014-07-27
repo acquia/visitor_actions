@@ -413,6 +413,7 @@ Drupal.visitorActions.ui = {
   ActionDialogVisualView: Dialog.views.ElementDialogView.extend({
 
     initialize: function() {
+      this.options.delay = 100;
       this.parent('inherit', this.options);
     },
 
@@ -503,7 +504,7 @@ Drupal.visitorActions.ui = {
      *   (optional) A function to invoke after positioning has finished.
      */
     position: function (callback) {
-      this.parent('position', callback, 100);
+      this.parent('position', callback);
     }
   })
 };

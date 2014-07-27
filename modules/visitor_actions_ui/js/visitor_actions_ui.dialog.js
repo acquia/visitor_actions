@@ -74,6 +74,21 @@
     initialize: function(options) {
       // The anchor determines the placement of the window.
       this.anchor = this.el;
+      this.delay = (options.delay && !isNaN(options.delay)) ? options.delay : 0;
+      if (options.myHorizontalEdge && ['left','right','center'].indexOf(options.myHorizontalEdge) >= 0) {
+        this.myHorizontalEdge = options.myHorizontalEdge;
+      } else {
+        this.myHorizontalEdge = (document.documentElementDir === 'rtl') ? 'right' : 'left';
+      }
+      if (options.anchorHorizontalEdge && ['left','right','center'].indexOf(options.anchorHorizontalEdge) >= 0) {
+        this.anchorHorizontalEdge = options.anchorHorizontalEdge;
+      } else {
+        this.anchorHorizontalEdge = this.myHorizontalEdge;
+      }
+      this.myVerticalEdge = (options.myVerticalEdge && ['top','bottom','center'].indexOf(options.myVerticalEdge) >= 0) ? options.myVerticalEdge : 'top';
+      this.anchorVerticalEdge = (options.anchorVerticalEdge && ['top','bottom','center'].indexOf(options.anchorVerticalEdge) >= 0) ? options.anchorVerticalEdge : 'bottom';
+      this.horizontalPadding = options.horizontalPadding && !isNaN(options.horizontalPadding) ? options.horizontalPadding : -4;
+      this.collision = (options.collision && ['flip','fit','flipfit','none'].indexOf(options.collision) >= 0) ? options.collision : 'flipfit';
 
       this.model.on('change:active', this.render, this);
       this.model.on('change:active', this.deactivate, this);
@@ -86,7 +101,7 @@
       }
       var that = this;
       // Create the dialog and set it as the element for this view.
-      this.setElement($(Drupal.theme.visitorActionsUIElementDialog({
+      this.setElement($(Drupal.theme('visitorActionsUIElementDialog', {
         id: this.model.id
       })));
       this.$el.appendTo('body');
@@ -208,19 +223,11 @@
      *
      * @param function callback
      *   (optional) A function to invoke after positioning has finished.
-     * @param int delay
-     *   (optional) The delay to wait before repositioning.
      */
-    position: function (callback, delay) {
+    position: function (callback) {
       clearTimeout(this.timer);
 
       var that = this;
-      // Vary the edge of the positioning according to the direction of language
-      // in the document.
-      var edge = (document.documentElement.dir === 'rtl') ? 'right' : 'left';
-      // Align the dialog with the edge of the highlighted element outline.
-      var horizontalPadding = -4;
-      delay = isNaN(delay) ? 0 : delay;
 
       /**
        * Refines the positioning algorithm of jquery.ui.position().
@@ -280,13 +287,13 @@
        */
       function positionDialog (callback) {
         that.$el.position_visitor_actions_ui({
-          my: edge + ' bottom',
+          my: that.myHorizontalEdge + ' ' + that.myVerticalEdge,
           // Move the toolbar 1px towards the start edge of the 'of' element,
           // plus any horizontal padding that may have been added to the element
           // that is being added, to prevent unwanted horizontal movement.
-          at: edge + '+' + (1 + horizontalPadding) + ' top',
+          at: that.anchorHorizontalEdge + '+' + (1 + that.horizontalPadding) + ' ' + that.anchorVerticalEdge,
           of: that.anchor,
-          collision: 'flipfit',
+          collision: that.collision,
           using: refinePosition
         });
         // Invoke an optional callback after the positioning has finished.
@@ -304,7 +311,7 @@
         // guarantee that all animations will be finished, but it's a simple way
         // to get better positioning without too much additional code.
         _.defer(positionDialog, callback);
-      }, delay);
+      }, that.delay);
     },
 
     /**

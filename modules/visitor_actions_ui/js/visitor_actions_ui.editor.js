@@ -414,7 +414,7 @@ Drupal.visitorActions.ui = {
 
     initialize: function(options) {
       options.delay = 100;
-      this.parent('inherit', this.options);
+      this.parent('inherit', options);
     },
 
     /**

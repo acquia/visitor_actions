@@ -74,6 +74,10 @@
     initialize: function(options) {
       // The anchor determines the placement of the window.
       this.anchor = this.el;
+      if (!this.anchor.id || this.anchor.id.length === 0) {
+        // Assign a temporary id for purposes of manipulation within this dialog.
+        this.anchor.id = 'visitorActionsUIDialog-' + new Date().getTime();
+      }
       this.delay = (options.delay && !isNaN(options.delay)) ? options.delay : 0;
       if (options.myHorizontalEdge && ['left','right','center'].indexOf(options.myHorizontalEdge) >= 0) {
         this.myHorizontalEdge = options.myHorizontalEdge;

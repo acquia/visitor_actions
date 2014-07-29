@@ -95,9 +95,9 @@
       this.horizontalPadding = options.horizontalPadding && !isNaN(options.horizontalPadding) ? options.horizontalPadding : -4;
       this.collision = (options.collision && ['flip','fit','flipfit','none'].indexOf(options.collision) >= 0) ? options.collision : 'flipfit';
 
-      this.model.on('change:active', this.render, this);
-      this.model.on('change:active', this.deactivate, this);
-      this.model.on('destroy', this.remove, this);
+      this.listenTo(this.model, 'change:active', this.render);
+      this.listenTo(this.model, 'change:active', this.deactivate);
+      this.listenTo(this.model, 'destroy', this.remove);
     },
 
     render: function (model, active) {

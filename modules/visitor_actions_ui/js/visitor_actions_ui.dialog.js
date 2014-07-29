@@ -109,6 +109,9 @@
       this.setElement($(Drupal.theme('visitorActionsUIElementDialog', {
         id: this.model.id
       })));
+      if (this.className) {
+        this.$el.addClass(this.className);
+      }
       this.$el.appendTo('body');
       // Reposition the dialog on window scroll and resize.
       $(window).off('.visitorActionsUI.elementDialogView');

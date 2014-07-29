@@ -186,7 +186,7 @@
         },
         success: function (response, status) {
           $('#' + that.anchor.id).off('formAction.visitorActionsUI.elementDialogView');
-          Drupal.ajax.prototype.success.call(this, response, status);
+          that.formSuccessHandler.call(that, this, response, status);
         },
         complete: function () {
           // Put the original Drupal.ajax error handler back.
@@ -200,6 +200,13 @@
       if (typeof formPath === 'string' && formPath.length > 0) {
         $('#' + this.anchor.id).trigger('formAction.visitorActionsUI.elementDialogView');
       }
+    },
+
+    /**
+     * A callback to be overridden to handle any events when a form is loaded.
+     */
+    formSuccessHandler: function (ajax, response, status) {
+      Drupal.ajax.prototype.success.call(ajax, response, status);
     },
 
     /**

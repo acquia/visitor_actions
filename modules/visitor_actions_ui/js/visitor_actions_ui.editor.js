@@ -412,8 +412,8 @@ Drupal.visitorActions.ui = {
    */
   ActionDialogVisualView: Dialog.views.ElementDialogView.extend({
 
-    initialize: function() {
-      this.options.delay = 100;
+    initialize: function(options) {
+      options.delay = 100;
       this.parent('inherit', this.options);
     },
 

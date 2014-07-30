@@ -66,7 +66,7 @@ function getDimensions( elem ) {
   };
 }
 
-  $.position_visitor_actions_ui = {
+$.position_visitor_actions_ui = {
   scrollbarWidth: function() {
     if ( cachedScrollbarWidth !== undefined ) {
       return cachedScrollbarWidth;

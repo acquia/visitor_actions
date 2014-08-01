@@ -206,6 +206,7 @@ function visitor_actions_ui_library() {
       array('system', 'drupal.form'),
       array('system', 'drupal.ajax'),
       array('visitor_actions_ui', 'ui.position.patched'),
+      array('visitor_actions_ui', 'utilities.backbone_parent'),
       array('visitor_actions_ui', 'underscore'),
       array('visitor_actions_ui', 'backbone'),
     ),
@@ -232,6 +233,19 @@ function visitor_actions_ui_library() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
+    ),
+  );
+
+  $libraries['utilities.backbone_parent'] = array(
+    'title' => 'Utility to add simplified inheritance to Backbone objects.',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/visitor_actions_ui.backbone_parent.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('visitor_actions_ui', 'backbone'),
+      array('visitor_actions_ui', 'underscore'),
     ),
   );
 

@@ -176,6 +176,9 @@ function visitor_actions_ui_library() {
     'js' => array(
       $path . '/js/visitor_actions_ui.editor.js' => $options,
     ),
+    'css' => array(
+      $path . '/css/visitor_actions_ui.theme.css',
+    ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'jquery.once'),

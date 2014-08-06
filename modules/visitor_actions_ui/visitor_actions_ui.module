@@ -174,23 +174,64 @@ function visitor_actions_ui_library() {
     'title' => 'Personalization in-place action editor',
     'version' => VERSION,
     'js' => array(
-      // Monkey-patch in jQuery UI 1.10 Position at $.fn.position_visitor_actions_ui.
-      $path . '/js/jquery/ducktape.position.js' => array('group' => JS_LIBRARY),
       $path . '/js/visitor_actions_ui.editor.js' => $options,
     ),
     'css' => array(
-      $path . '/css/visitor_actions_ui.module.css',
       $path . '/css/visitor_actions_ui.theme.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'jquery.once'),
-      array('system', 'jquery.form'),
-      array('system', 'ui.position'),
-      array('system', 'drupal.form'),
-      array('system', 'drupal.ajax'),
+      array('visitor_actions_ui', 'ui.element_dialog'),
+      array('visitor_actions_ui', 'utilities.element_selector'),
       array('visitor_actions_ui', 'underscore'),
       array('visitor_actions_ui', 'backbone'),
+    ),
+  );
+
+  $libraries['ui.element_dialog'] = array(
+    'title' => 'A dialog solution that is anchored to a DOM element',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/visitor_actions_ui.dialog.js' => $options,
+    ),
+    'css' => array(
+      $path . '/css/visitor_actions_ui.dialog.css',
+      $path . '/css/visitor_actions_ui.dialog.theme.css',
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'jquery.once'),
+      array('system', 'jquery.form'),
+      array('system', 'drupal.form'),
+      array('system', 'drupal.ajax'),
+      array('visitor_actions_ui', 'ui.position.patched'),
+      array('visitor_actions_ui', 'underscore'),
+      array('visitor_actions_ui', 'backbone'),
+    ),
+  );
+
+  $libraries['ui.position.patched'] = array(
+    'title' => 'Monkey-patched jQeuery UI position',
+    'version' => VERSION,
+    'js' => array(
+      // Monkey-patch in jQuery UI 1.10 Position at $.fn.position_visitor_actions_ui.
+      $path . '/js/jquery/ducktape.position.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'ui.position'),
+    ),
+  );
+
+  $libraries['utilities.element_selector'] = array(
+    'title' => 'Utility to generate the selector for an element',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/visitor_actions_ui.selector.js' => array('group' => JS_LIBRARY),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
     ),
   );
 

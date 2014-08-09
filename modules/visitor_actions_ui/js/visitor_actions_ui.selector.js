@@ -85,6 +85,7 @@
     function removeIgnoreAttributes(element, ignoreId, ignoreClasses) {
       var tempId = '',
         tempClasses,
+        tempClassNames,
         temp = '',
         matches = '',
         autoIgnoreMatches = '',
@@ -119,10 +120,12 @@
       }
       autoIgnoreMatches = element.className.match(ignoreAutoClasses);
       // Remove any visitorActionsUI classes or *-processed classes.
-      tempClasses = matches instanceof Array ? matches.join(' ') : '';
-      tempClasses += ' ' + autoIgnoreMatches instanceof Array ? matches.join(' ') : '';
-      $(element).removeClass(tempClasses);
-      return [tempId, tempClasses];
+      matches = matches instanceof Array ? matches : [];
+      autoIgnoreMatches = autoIgnoreMatches instanceof Array ? autoIgnoreMatches : [];
+      tempClasses = $.merge(matches, autoIgnoreMatches);
+      tempClassNames = tempClasses.join(' ');
+      $(element).removeClass(tempClassNames);
+      return [tempId, tempClassNames];
     }
 
     /**

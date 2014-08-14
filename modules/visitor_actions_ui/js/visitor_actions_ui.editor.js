@@ -58,7 +58,8 @@ Drupal.behaviors.visitorActionsUIEditor = {
 };
 
 Drupal.visitorActions = Drupal.visitorActions || {};
-Drupal.visitorActions.ui = {
+Drupal.visitorActions.ui = Drupal.visitorActions.ui || {};
+$.extend(Drupal.visitorActions.ui, {
 
   // A hash of View instances.
   views: {},
@@ -414,7 +415,7 @@ Drupal.visitorActions.ui = {
 
     initialize: function(options) {
       options.delay = 100;
-      this.parent('inherit', this.options);
+      this.parent('inherit', options);
     },
 
     /**
@@ -507,7 +508,7 @@ Drupal.visitorActions.ui = {
       this.parent('position', callback);
     }
   })
-};
+});
 
 /**
  * Theme function for a container to present actionable elements without IDs.

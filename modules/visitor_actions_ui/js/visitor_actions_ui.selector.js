@@ -151,12 +151,13 @@
     var removed = removeIgnoreAttributes(element, ignoreId, ignoreClasses);
     var removedId = removed[0];
     var removedClasses = removed[1];
+    var invalidParents = ['#document', 'HTML', 'BODY'];
 
     var hasId = notEmpty(element.id),
       hasClass = notEmpty(element.className),
       isElement = element.nodeType === 1,
       isRoot = element.parentNode === element.ownerDocument,
-      hasParent = element.parentNode != null,
+      hasParent = element.parentNode != null && invalidParents.indexOf(element.parentNode.nodeName) == -1,
       selector = '';
 
     if (!isRoot && isElement) {

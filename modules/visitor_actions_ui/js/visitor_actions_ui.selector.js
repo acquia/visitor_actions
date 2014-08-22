@@ -56,7 +56,7 @@
           }
           nthStack.push(nthName);
           if (parent.childNodes[i] === element) {
-            if (nthStack.length == 1) {
+            if (nthStack.length > 1) {
               nthStack[0] += ":first-child";
             }
             return nthStack.join(" + ");

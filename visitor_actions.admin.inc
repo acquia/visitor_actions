@@ -198,6 +198,7 @@ function visitor_actions_get_form_options($actionable_element, &$form, $needs_st
       $form['identifier'][$actionable_element] = array(
         '#title' => call_user_func(array($class, 'getIdentifierLabel')),
         '#type' => 'textfield',
+        '#maxlength' => 500,
       );
       if ($needs_states) {
         $form['identifier'][$actionable_element]['#states'] = array_merge($visible_state, $required_state);

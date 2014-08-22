@@ -265,6 +265,11 @@ $.extend(Drupal.visitorActions.ui, {
             if (rVA.test(id) || rTask.test(className) || rAdmin.test(href) || rNode.test(href)) {
               return false;
             }
+            // Check to see if it is within visitor actions dialog.
+            /*
+            if ($(this).parents('.visitor-actions-ui-dialog').length > 0) {
+              return false;
+            }*/
             // Keep the element as the default.
             return true;
           })

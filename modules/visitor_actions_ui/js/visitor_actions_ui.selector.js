@@ -204,7 +204,62 @@
     }
 
     /**
-     * Creates a unique selector using id, classes and attributes.
+     * Generates a more complicated selector based on the element's position
+     * in the DOM.
+     *
+     * While not guaranteed to be unique, it is very close.
+     *
+     * @param DOM element
+     * @returns string
+     *   A selector for the element.
+     */
+    function generateUniqueSelector(element) {
+      var invalidParents = ['#document', 'HTML', 'BODY'];
+      var hasParent = element.parentNode != null && invalidParents.indexOf(element.parentNode.nodeName) == -1;
+
+      var selector = nthChild(element);
+      if (hasParent) {
+        return Drupal.utilities.getSelector(element.parentNode, ignoreId, ignoreClasses) + " > " + selector;
+      }
+      return selector;
+    }
+
+    /**
+     * Determines the element selector for a child element based on element
+     * name.
+
+     * @param element
+     *   The element to use for determination
+     * @returns string
+     *   The selector string to use
+     */
+    function nthChild(element) {
+      if (element == null || element.ownerDocument == null || element === document || element === document.body || element === document.head) {
+        return "";
+      }
+      var parent = element.parentNode || null;
+      if (parent) {
+        var nthStack = [];
+        var num = parent.childNodes.length;
+        for (var i = 0; i < num; i++) {
+          var nthName = parent.childNodes[i].nodeName.toLowerCase();
+          if (nthName === "#text") {
+            continue;
+          }
+          nthStack.push(nthName);
+          if (parent.childNodes[i] === element) {
+            if (nthStack.length > 1) {
+              nthStack[0] += ":first-child";
+            }
+            return nthStack.join(" + ");
+          }
+        }
+      }
+      return element.nodeName.toLowerCase();
+    }
+
+    /**
+     * Creates a simple selector using id, classes and attributes.
      *
      * It is possible that the selector will not be unique if there is no
      * unique description using only ids, classes and attributes of an
@@ -269,10 +324,15 @@
     var removed = removeIgnoreAttributes(element, ignoreId, ignoreClasses);
     var removedId = removed[0];
     var removedClasses = removed[1];
+
     selector = generateSimplifiedSelector(element);
+    if (!isUniquePath(selector)) {
+      // generate the selector based on nth child which will produce a longer
+      // and crazier looking selector but far more likely to be unique.
+      selector = generateUniqueSelector(element);
+    }
 
     restoreIgnoredAttributes(element, removedId, removedClasses);
     return selector;
-
   }
 }(jQuery, Drupal));

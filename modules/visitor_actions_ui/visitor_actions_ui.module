@@ -325,6 +325,7 @@ function visitor_actions_ui_libraries_info() {
         'minified' => array(
           'file' => 'underscore-min.js',
           'pattern' => '#VERSION *\W *[\'\"]{1}(.*?)[\'\"]{1}#',
+          'cols' => 2000,
         ),
       ),
     ),

@@ -194,11 +194,14 @@ function visitor_actions_page_build(&$page) {
   //   send actionableElementTypes if we are in edit mode and we
   //   only need to send client-side actions if we are not.
   $actionable_element_types = visitor_actions_get_actionable_element_types();
+  $ignore = visitor_actions_get_selector_ignore();
   $settings = array(
     'currentPath' => current_path(),
     'actions' => array(),
     'actionableElementTypes' => $actionable_element_types,
     'pageContext' => visitor_actions_get_page_context(),
+    'ignoreClasses' => $ignore['classes'],
+    'ignoreIds' => $ignore['ids'],
   );
   $client_side_actions = visitor_actions_get_client_side_actions();
   $page_actions = array();
@@ -519,6 +522,26 @@ function visitor_actions_get_cache($cid) {
 }
 
 /**
+ * Generates the ignore regular expressions for use when selecting elements.
+ *
+ * @return array
+ *   An array of two keys:
+ *   - classes: The regular expression to use for ignoring classes.
+ *   - ids: The regular expression to use for ignoring ids.
+ */
+function visitor_actions_get_selector_ignore() {
+  $ignore = module_invoke_all('visitor_actions_selector_ignore');
+  $parsed = array();
+  foreach ($ignore as $type => $expressions) {
+    array_walk($expressions, function(&$expression) {
+      $expression = '(' . $expression . ')';
+    });
+    $parsed[$type] = implode('|', $expressions);
+  }
+  return $parsed;
+}
+
+/**
  * =======================================================================
  *  P L U G I N   I N F O
  * =======================================================================
@@ -667,4 +690,22 @@ function visitor_actions_visitor_actions_actionable_element() {
     ),
   );
   return $info;
+}
+
+/**
+ * Implements hook_visitor_actions_selector_ignore().
+ */
+function visitor_actions_visitor_actions_selector_ignore() {
+  return array(
+    'classes' => array(
+      '[a-zA-Z0-9\_\-]*-processed',
+      'quickedit-[a-zA-Z0-9\_]*',
+      'visitor-actions-ui[a-zA-Z0-9\_\-]*',
+    ),
+    'ids' => array(
+      '^visitorActionsUI-',
+      '^visitorActionsUIDialog-',
+      '^panels-ipe-'
+    ),
+  );
 }

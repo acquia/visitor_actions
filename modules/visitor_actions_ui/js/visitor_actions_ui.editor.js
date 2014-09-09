@@ -494,8 +494,8 @@ $.extend(Drupal.visitorActions.ui, {
 
 
         // Prefill the selector for the element.
-        var ignoreClassesRegex = /(visitor-actions-ui[a-zA-Z0-9-_]*)/g;
-        var ignoreIdRegex = /^(visitorActionsUI-)|(visitorActionsUIDialog-)/;
+        var ignoreClassesRegex = new RegExp(Drupal.settings.visitor_actions.ignoreClasses, 'g');
+        var ignoreIdRegex = new RegExp(Drupal.settings.visitor_actions.ignoreIds);
         var selector = Utilities.getSelector(ajax.element, ignoreIdRegex, ignoreClassesRegex);
         $dialog.find('[name="identifier[' + type + ']"]').val(Drupal.formatString(selector));
       };

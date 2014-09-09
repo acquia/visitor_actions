@@ -39,6 +39,9 @@
   position: relative;
   z-index: 1;
 }
+.visitor-actions-ui-dialog .visitor-actions-ui-dialog-content a {
+  color: #75BEFF;
+}
 .visitor-actions-ui-dialog .visitor-actions-ui-dialog-content form {
   margin: 0;
   padding: 0;

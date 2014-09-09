@@ -56,8 +56,7 @@
         matches = '',
         autoIgnoreMatches = '',
         ignoreId = typeof ignoreId === 'undefined' ? '' : ignoreId,
-        ignoreClasses = typeof ignoreClasses === 'undefined' ? '' : ignoreClasses,
-        ignoreAutoClasses = /([a-zA-Z0-9-_]*-processed )|([a-zA-Z0-9-_]*-processed$)|(quickedit-[a-zA-Z0-9_]*)/ig;
+        ignoreClasses = typeof ignoreClasses === 'undefined' ? '' : ignoreClasses;
 
       // Convert the ignoreID  and ignoreClasses to regular expressions if only
       // strings passed in.
@@ -82,13 +81,10 @@
       }
       // Remove any classes to be ignored.
       if (ignoreClasses instanceof RegExp) {
-        matches = element.className.match(ignoreClasses);
+        tempClasses = element.className.match(ignoreClasses);
       }
-      autoIgnoreMatches = element.className.match(ignoreAutoClasses);
       // Remove any visitorActionsUI classes or *-processed classes.
-      matches = matches instanceof Array ? matches : [];
-      autoIgnoreMatches = autoIgnoreMatches instanceof Array ? autoIgnoreMatches : [];
-      tempClasses = $.merge(matches, autoIgnoreMatches);
+      tempClasses = tempClasses instanceof Array ? tempClasses : [];
       tempClassNames = tempClasses.join(' ');
       $(element).removeClass(tempClassNames);
       return [tempId, tempClassNames];

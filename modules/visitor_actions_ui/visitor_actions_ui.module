@@ -69,6 +69,7 @@ function visitor_actions_ui_page_build(&$page) {
     if (visitor_actions_ui_nav_message_is_set()) {
       drupal_set_message(visitor_actions_ui_edit_mode_action_in_context(), 'visitor-actions-ui');
     }
+    $ignore = visitor_actions_ui_get_selector_ignore();
 
     $page['page_top']['visitor_actions_ui'] = array(
       '#access' => user_access('administer visitor actions'),
@@ -84,6 +85,8 @@ function visitor_actions_ui_page_build(&$page) {
               'visitor_actions' => array(
                 // @todo make this per-theme configurable.
                 'content_wrapper' => variable_get('visitor_actions_controls_selector', '#page-wrapper'),
+                'ignoreClasses' => $ignore['classes'],
+                'ignoreIds' => $ignore['ids'],
               ),
             ),
           ),
@@ -561,6 +564,24 @@ function _visitor_actions_ui_libraries_get_preferred_variant_name($library) {
 }
 
 /**
+ * Implements hook_visitor_actions_selector_ignore().
+ */
+function visitor_actions_ui_visitor_actions_ui_selector_ignore() {
+  return array(
+    'classes' => array(
+      '[a-zA-Z0-9\_\-]*-processed',
+      'quickedit-[a-zA-Z0-9\_]*',
+      'visitor-actions-ui[a-zA-Z0-9\_\-]*',
+    ),
+    'ids' => array(
+      '^visitorActionsUI-',
+      '^visitorActionsUIDialog-',
+      '^panels-ipe-'
+    ),
+  );
+}
+
+/**
  * =======================================================================
  *  E N D  O F  C O N T R I B   M O D U L E   H O O K S
  * =======================================================================
@@ -762,6 +783,27 @@ function visitor_actions_ui_add_form_ajax_callback($form, &$form_state) {
   }
 
   return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Generates the ignore regular expressions for use when selecting elements.
+ *
+ * @return array
+ *   An array of two keys:
+ *   - classes: The regular expression to use for ignoring classes.
+ *   - ids: The regular expression to use for ignoring ids.
+ */
+function visitor_actions_ui_get_selector_ignore() {
+  $ignore = module_invoke_all('visitor_actions_ui_selector_ignore');
+  $parsed = array();
+  $parsed['classes'] = $parsed['ids'] = '';
+  foreach ($ignore as $type => $expressions) {
+    array_walk($expressions, function(&$expression) {
+      $expression = '(' . $expression . ')';
+    });
+    $parsed[$type] = implode('|', $expressions);
+  }
+  return $parsed;
 }
 
 /**

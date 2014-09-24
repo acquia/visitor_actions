@@ -404,10 +404,29 @@ function visitor_actions_save_action($action) {
   if (is_array($fields['data'])) {
     $fields['data'] = serialize($fields['data']);
   }
-  db_merge('visitor_actions_actions')
-    ->key(array('machine_name' => $action['machine_name']))
-    ->fields($fields)
-    ->execute();
+  try {
+    db_merge('visitor_actions_actions')
+      ->key(array('machine_name' => $action['machine_name']))
+      ->fields($fields)
+      ->execute();
+  }
+  catch (Exception $e) {
+    drupal_set_message(t('There was a problem saving the visitor action @action_name', array('@action_name' => $action['machine_name'])), 'error');
+    return FALSE;
+  }
+  return TRUE;
+}
+
+/**
+ * Returns whether a machine name is already taken by an existing action.
+ *
+ * @param $machine_name
+ *   The machine name to check.
+ * @return boolean
+ */
+function visitor_actions_machine_name_exists($machine_name) {
+  $action = visitor_actions_custom_load($machine_name);
+  return !empty($action);
 }
 
 /**

@@ -126,10 +126,14 @@
           }
           if (target && target.href !== undefined) {
             if (!jsEvent.isDefaultPrevented()) {
-              var redirectPath = target.href;
-              callback = function () {
-                window.location.href = redirectPath;
-              }
+              callback = (function(target) {
+                // Let this event fire without re-triggering visitor actions.
+                $(target).unbind('.' + eventNamespace);
+                target.click();
+                // Now re-bind the event listener in case there are more goals
+                // to be fired from this link.
+                $(target).bind('click.' + eventNamespace, {'eventNamspace': eventNamespace}, Drupal.visitorActions.link.onVisitorActionsEvent);
+              })(jsEvent.currentTarget);
             }
             jsEvent.preventDefault();
           }
@@ -198,32 +202,36 @@
   }
 
   Drupal.visitorActions.link = {
+    'callback': null,
     'bindEvent': function (name, action, context, callback) {
       var $selector = $(action.identifier, context);
-      var actionContext = Drupal.visitorActions.getPageContext();
+      this.callback = callback;
       $selector
         .once('visitorActions-' + name)
-        .bind(action.event + '.' + eventNamespace, {'eventNamespace' : eventNamespace}, function (event) {
-          // Add link click context to action context.
-          if (event.type === 'click') {
-            var linkContext = {};
-            linkContext.DestinationUrl = $(this).attr('href');
-            linkContext.AnchorText = $(this).text();
-            linkContext.LinkClasses = $(this).attr('class').split(' ');
-            linkContext.DataAttributes = {};
-            var linkData = $selector.data();
-            for (var dataKey in linkData) {
-              var typeData = typeof(linkData[dataKey]);
-              if (typeData !== 'object' && typeData !== 'undefined' && typeData !== 'function') {
-                linkContext.DataAttributes[dataKey] = linkData[dataKey];
-              }
-            }
-            actionContext.Click = linkContext;
+        .bind(action.event + '.' + eventNamespace, {'eventNamespace' : eventNamespace}, Drupal.visitorActions.link.onVisitorActionsEvent);
+    },
+    'onVisitorActionsEvent': function (event) {
+      var actionContext = Drupal.visitorActions.getPageContext();
+
+      // Add link click context to action context.
+      if (event.type === 'click') {
+        var linkContext = {};
+        linkContext.DestinationUrl = $(this).attr('href');
+        linkContext.AnchorText = $(this).text();
+        linkContext.LinkClasses = $(this).attr('class').split(' ');
+        linkContext.DataAttributes = {};
+        var linkData = $(event.currentTarget).data();
+        for (var dataKey in linkData) {
+          var typeData = typeof(linkData[dataKey]);
+          if (typeData !== 'object' && typeData !== 'undefined' && typeData !== 'function') {
+            linkContext.DataAttributes[dataKey] = linkData[dataKey];
           }
-          if (typeof callback === 'function') {
-            callback.call(null, event, actionContext)
-          }
-        });
+        }
+        actionContext.Click = linkContext;
+      }
+      if (typeof Drupal.visitorActions.link.callback === 'function') {
+        Drupal.visitorActions.link.callback.call(null, event, actionContext)
+      }
     }
   };
 

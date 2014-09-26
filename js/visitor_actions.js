@@ -106,6 +106,14 @@
       if (!alreadyExists) {
         this.subscribers.push(subscriber);
       }
+    },
+    /**
+     * Clears a publisher's subscribers.
+     *
+     * Used for testing purposes.
+     */
+    reset: function() {
+      this.subscribers = [];
     }
   };
 
@@ -324,6 +332,9 @@
       if (typeof(this[action.event]) === 'function') {
         this[action.event].call(this, name, action, context, callback);
       }
+    },
+    'reset': function() {
+      pageViewed = false;
     }
   };
 

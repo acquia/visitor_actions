@@ -120,40 +120,6 @@
   Drupal.visitorActions = Drupal.visitorActions || {};
   Drupal.visitorActions.publisher = new Publisher();
 
-  Drupal.visitorActions.preventDefaultCallback = function (jsEvent) {
-    var callback;
-    if (jsEvent !== undefined) {
-      switch (jsEvent.type) {
-        // We're going to be making an ajax call so we need to prevent the default
-        // behavior until our call has been made.
-        case 'click':
-          // Make sure we have an href to redirect to later.
-          var target = jsEvent.target;
-          while (target && target.nodeName !== 'A') {
-            target = target.parentNode;
-          }
-          if (target && target.href !== undefined) {
-            if (!jsEvent.isDefaultPrevented()) {
-              var redirectPath = target.href;
-              callback = function () {
-                window.location.href = redirectPath;
-              }
-            }
-            jsEvent.preventDefault();
-          }
-          break;
-        case 'submit':
-          if (jsEvent.hasOwnProperty('data') && jsEvent.data.hasOwnProperty('eventNamespace')) {
-            var form = jsEvent.currentTarget, submitEvent = 'submit.' + jsEvent.data.eventNamespace;
-            callback = function () {
-              $(form).unbind(submitEvent).submit();
-            };
-            jsEvent.preventDefault();
-          }
-      }
-    }
-    return callback;
-  }
   /**
    * Binds events to selectors for client-side visitor actions.
    */

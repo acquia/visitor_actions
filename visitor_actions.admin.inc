@@ -247,10 +247,31 @@ function visitor_actions_form_validate($form, &$form_state) {
   $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 
   if ($op == t('Save')) {
+    $plugin = $form_state['values']['actionable_element'];
     // Allow the plugin to validate the form values.
     ctools_include('plugins');
-    if ($class = ctools_plugin_load_class('visitor_actions', 'actionable_element', $form_state['values']['actionable_element'], 'handler')) {
+    if ($class = ctools_plugin_load_class('visitor_actions', 'actionable_element', $plugin, 'handler')) {
       call_user_func_array(array($class, 'validate'), array($form_state['values']));
+    }
+
+    // Validating a CSS selector is generally beyond what REGEX can handle,
+    // and using the Drupal cleaning scripts all update < > to entities
+    // so just make sure that there are no tags.
+    $re = "/<\\/?[a-z][a-z0-9]*[^<>]*>|<!--.*?-->/im";
+    $matched = preg_match_all($re, $form_state['values']['identifier'][$plugin]);
+    if ($matched > 0) {
+      form_set_error('identifier[' . $plugin . ']', t('The selector cannot contain tags.'));
+    }
+
+    // Validate any page limits.
+    foreach(preg_split('~[\r\n]+~', $form_state['values']['pages']) as $line){
+      if(empty($line)) {
+        continue;
+      }
+      if (!drupal_valid_path($line, TRUE)) {
+        form_set_error('pages', t('The selected pages must contain valid paths.'));
+        break;
+      }
     }
   }
 }

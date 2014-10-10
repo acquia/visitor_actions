@@ -252,6 +252,17 @@ function visitor_actions_form_validate($form, &$form_state) {
     if ($class = ctools_plugin_load_class('visitor_actions', 'actionable_element', $form_state['values']['actionable_element'], 'handler')) {
       call_user_func_array(array($class, 'validate'), array($form_state['values']));
     }
+
+    // Validate any page limits.
+    foreach(preg_split('~[\r\n]+~', $form_state['values']['pages']) as $line){
+      if(empty($line)) {
+        continue;
+      }
+      if (!drupal_valid_path($line, TRUE)) {
+        form_set_error('pages', t('The selected pages must contain valid paths.'));
+        break;
+      }
+    }
   }
 }
 

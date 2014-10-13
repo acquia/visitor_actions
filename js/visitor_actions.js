@@ -173,8 +173,14 @@
 
   Drupal.visitorActions.link = {
     'bindEvent': function (name, action, context, callback) {
-      var $selector = $(action.identifier, context);
       var actionContext = Drupal.visitorActions.getPageContext();
+      // Make sure the selector is valid.
+      try {
+        var $selector = $(action.identifier, context);
+      } catch (error) {
+        // Can't add a bind event because the selector is invalid.
+        return;
+      }
       $selector
         .once('visitorActions-' + name)
         .bind(action.event + '.' + eventNamespace, {'eventNamespace' : eventNamespace}, function (event) {
@@ -206,7 +212,12 @@
       // Drupal form IDs get their underscores converted to hyphens when
       // output as element IDs in markup.
       var formId = action.identifier.replace(/_/g, '-');
-      var $selector = $('form#' + formId, context);
+      try {
+        var $selector = $(action.identifier, context);
+      } catch (error) {
+        // Can't add a bind event because the selector is invalid.
+        return;
+      }
       var pageContext = Drupal.visitorActions.getPageContext();
       if ($selector.length == 0 || typeof callback !== 'function') {
         return;

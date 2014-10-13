@@ -166,7 +166,7 @@ QUnit.test('Visitor actions link elements', function (assert) {
   Drupal.behaviors.visitorActions.attach($('#qunit-fixture'), Drupal.settings);
 
   // Simulate a link click.
-  $('a.link-a')[0].click();
+  $('a.link-a').click();
 
   // Clean-up.
   cleanup();

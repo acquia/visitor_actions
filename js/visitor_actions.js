@@ -213,7 +213,7 @@
       // output as element IDs in markup.
       var formId = action.identifier.replace(/_/g, '-');
       try {
-        var $selector = $(action.identifier, context);
+        var $selector = $('form#' + formId, context);
       } catch (error) {
         // Can't add a bind event because the selector is invalid.
         return;

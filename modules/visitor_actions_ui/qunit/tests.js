@@ -9,7 +9,7 @@ QUnit.test("selector basics", function( assert ) {
   assert.equal(selector, '#page', 'ID selector matched');
   $elem = jQuery('.myclass');
   selector = Drupal.utilities.getSelector($elem[0]);
-  assert.equal(selector, '#page > .ignoreme.myclass', 'Class match produces a unique selector.');
+  assert.equal(selector, '#page p.ignoreme.myclass', 'Class match produces a unique selector.');
   $elem = jQuery('#ignoremyid');
   selector = Drupal.utilities.getSelector($elem[0], 'ignoremyid');
   assert.equal(selector, '#page > p:first-child + p + p', 'Ignored id not included in selector.');
@@ -17,7 +17,7 @@ QUnit.test("selector basics", function( assert ) {
   assert.equal($elem.length, 1, 'Ignore id restored');
   $elem = jQuery('.ignoreme');
   selector = Drupal.utilities.getSelector($elem[0], 'ignoremyid', 'ignoreme');
-  assert.equal(selector, '#page > .myclass', 'Ignored class name not included in selector.');
+  assert.equal(selector, '#page > p', 'Ignored class name not included in selector.');
   $elem = jQuery('.ignoreme');
   assert.equal($elem.length, 1, 'Ignore class restored');
 });

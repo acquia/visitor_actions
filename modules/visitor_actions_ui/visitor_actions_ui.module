@@ -275,11 +275,14 @@ function visitor_actions_ui_library() {
  */
 function visitor_actions_ui_library_alter(&$libraries, $module) {
   $jquery_version = &drupal_static(__FUNCTION__, NULL);
+  $path = drupal_get_path('module', 'visitor_actions_ui');
   if ($module == 'system') {
     $jquery_version = $libraries['jquery']['version'];
+
+    // Tack on an additional JS file to noConflict mode jQuery into a variable.
+    $libraries['jquery']['js'][$path . '/js/jquery/alias.js'] = array('group' => JS_LIBRARY);
   }
   if ($jquery_version && $module == 'visitor_actions_ui') {
-    $path = drupal_get_path('module', 'visitor_actions_ui');
     // If the version of jQuery is old, we need to add `on` and `off`.
     if ($jquery_version < '1.7') {
       $libraries['action.editor']['js'][$path . '/js/jquery/ducktape.events.js'] = array('group' => JS_LIBRARY);

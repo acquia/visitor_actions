@@ -1,9 +1,10 @@
 /**
  * @file visitor_actions_ui.editor.js
  */
-(function (Drupal, $, _, Backbone, Dialog, Utilities) {
+(function (Drupal, _, Backbone, Dialog, Utilities) {
 
 "use strict";
+$ = Drupal.jQuery;
 
 // If we have a version of jQuery > 1.7, then use $.proxy.
 // $.proxy_visitor_actions_ui will be defined when jQuery < 1.7.
@@ -543,4 +544,4 @@ Drupal.theme.visitorActionsUIButton = function (options) {
   return '<button>' + options.text + '</button>';
 };
 
-}(Drupal, jQuery, _, Backbone, Drupal.visitorActions.ui.dialog, Drupal.utilities));
+}(Drupal, _, Backbone, Drupal.visitorActions.ui.dialog, Drupal.utilities));

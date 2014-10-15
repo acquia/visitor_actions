@@ -512,6 +512,32 @@ $.extend(Drupal.visitorActions.ui, {
      */
     position: function (callback) {
       this.parent('position', callback);
+    },
+
+    formSuccessHandler: function (ajax, response, status) {
+      this.parent('formSuccessHandler', ajax, response, status);
+      $('input[name="identifier[form]"], input[name="identifier[link]"]', this.el).on('change', function(e) {
+        var $idForm = $(this).closest('form');
+        try {
+          var test = $(this).val();
+          var valid = $(test);
+        } catch (error) {
+          $(this).addClass('error');
+          if ($('.visitor-actions-ui-js-message', $idForm).length == 0) {
+            var errorMessage = '<div class="visitor-actions-ui-js-message"><div class="messages error"><h2 class="element-invisible">' + Drupal.t('Error message') + '</h2>';
+            errorMessage += Drupal.t('Selector field must contain a valid jQuery selector.');
+            errorMessage += '</div></div>';
+            $idForm.prepend(errorMessage);
+          }
+          $('#edit-submit-form', $idForm).attr('disabled', 'disabled').addClass('form-button-disabled');
+          return;
+        }
+        // If we are still here then validation passed and any previous
+        // error messages should be removed.
+        $(this).removeClass('error');
+        $('.visitor-actions-ui-js-message', $idForm).remove();
+        $('#edit-submit-form', $idForm).removeAttr('disabled').removeClass('form-button-disabled');
+      });
     }
   })
 });

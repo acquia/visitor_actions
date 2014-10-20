@@ -94,6 +94,19 @@ class VisitorActionsTest extends DrupalWebTestCase {
     $va_settings = $settings['visitor_actions'];
 
     $this->assertTrue(in_array($action_name, array_keys($va_settings['actions'])));
+
+    // Now edit the action and specify '<front>' as the path.
+    $edit = array(
+      'pages' => '<front>',
+    );
+    $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
+    $this->assertNoText('The selected pages must contain valid paths.');
+    // Now edit the action and specify an invalid path.
+    $edit = array(
+      'pages' => 'some invalid url',
+    );
+    $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
+    $this->assertText('The selected pages must contain valid paths.');
   }
 
   public function testFormServerSideAction() {

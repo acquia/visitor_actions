@@ -34,7 +34,7 @@ Drupal.behaviors.visitorActionsUIEditor = {
     });
     var toggleViews = Drupal.visitorActions.ui.views.toggleViews = [];
     // Process the visitor actions edit mode toggle.
-    $('[href="/admin/structure/visitor_actions/add"]')
+    $('[href="' + Drupal.settings.basePath + 'admin/structure/visitor_actions/add"]')
       .each(function (index, element) {
         toggleViews.push(
           (new Drupal.visitorActions.ui.AppToggleView({

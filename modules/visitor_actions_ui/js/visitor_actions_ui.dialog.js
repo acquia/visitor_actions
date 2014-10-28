@@ -331,4 +331,4 @@
     return html;
   };
 
-}(Drupal, jQuery, _, Backbone));
+}(Drupal, Drupal.jQuery, _, Backbone));

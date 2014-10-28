@@ -34,4 +34,4 @@
       this.constructor.__super__[attribute].apply(this, _.rest(arguments)) :
       this.constructor.__super__[attribute];
   };
-}(jQuery, _, Backbone));
+}(Drupal.jQuery, _, Backbone));

@@ -331,4 +331,4 @@
     restoreIgnoredAttributes(element, removedId, removedClasses);
     return selector;
   }
-}(jQuery, Drupal));
+}(Drupal.jQuery, Drupal));

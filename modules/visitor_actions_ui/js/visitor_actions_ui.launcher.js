@@ -193,4 +193,4 @@ function getAppView () {
   return Drupal.visitorActions && Drupal.visitorActions.ui && Drupal.visitorActions.ui.views && Drupal.visitorActions.ui.views.appView;
 }
 
-}(Drupal, jQuery));
+}(Drupal, Drupal.jQuery));

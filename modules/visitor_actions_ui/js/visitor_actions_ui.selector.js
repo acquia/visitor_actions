@@ -20,6 +20,25 @@
    */
   Drupal.utilities.getSelector = Drupal.utilities.getSelector || function (element, ignoreId, ignoreClasses) {
 
+    // Convert the ignoreID  and ignoreClasses to regular expressions if only
+    // strings passed in.
+    ignoreId = typeof ignoreId === 'undefined' ? '' : ignoreId;
+    ignoreClasses = typeof ignoreClasses === 'undefined' ? '' : ignoreClasses;
+    if (typeof ignoreId === 'string' && notEmpty(ignoreId)) {
+      ignoreId = new RegExp('^' + ignoreId + '$', i);
+    }
+    if (typeof ignoreClasses === 'string' && notEmpty(ignoreClasses)) {
+      temp = ignoreClasses.split(' ');
+      ignoreClasses = '';
+      for (var i=0; i<temp.length; i++) {
+        ignoreClasses += '(' + temp[i] + ')';
+        if (i < (temp.length-1)) {
+          ignoreClasses += '|';
+        }
+      }
+      ignoreClasses = new RegExp(ignoreClasses);
+    }
+
     /**
      * Utility function to test if a string value empty.
      *
@@ -51,29 +70,8 @@
     function removeIgnoreAttributes(element, ignoreId, ignoreClasses) {
       var tempId = '',
         tempClasses,
-        tempClassNames,
-        temp = '',
-        matches = '',
-        autoIgnoreMatches = '',
-        ignoreId = typeof ignoreId === 'undefined' ? '' : ignoreId,
-        ignoreClasses = typeof ignoreClasses === 'undefined' ? '' : ignoreClasses;
+        tempClassNames;
 
-      // Convert the ignoreID  and ignoreClasses to regular expressions if only
-      // strings passed in.
-      if (typeof ignoreId === 'string' && notEmpty(ignoreId)) {
-        ignoreId = new RegExp('^' + ignoreId + '$', i);
-      }
-      if (typeof ignoreClasses === 'string' && notEmpty(ignoreClasses)) {
-        temp = ignoreClasses.split(' ');
-        ignoreClasses = '';
-        for (var i=0; i<temp.length; i++) {
-          ignoreClasses += '(' + temp[i] + ')';
-          if (i < (temp.length-1)) {
-            ignoreClasses += '|';
-          }
-        }
-        ignoreClasses = new RegExp(ignoreClasses);
-      }
       // Pull out any ids to be ignored.
       if (ignoreId instanceof RegExp && notEmpty(element.id) && ignoreId.test(element.id)) {
         tempId = element.id;
@@ -134,12 +132,11 @@
      *   An id selector or an empty string.
      */
     function applyID (element) {
-      var selector = '';
-      var id = element.id;
-      if (id.length > 0 && !/visitorActions/.test(id)) {
-        selector = '#' + id;
+      // Don't return any id to apply if it matches the ignore id regex.
+      if (ignoreId instanceof RegExp && notEmpty(element.id) && ignoreId.test(element.id)) {
+        return '';
       }
-      return selector;
+      return notEmpty(element.id) ? '#' + element.id : '';
     }
 
     /**
@@ -157,11 +154,16 @@
       var selector = '';
       // Try to make a selector from the element's classes.
       var classes = element.className || '';
+      // Filter out classes that might represent state.
+      var removeClasses = ['active','enabled','disabled','first','last','only','collapsed','open','clearfix','processed'];
       if (classes.length > 0) {
+        if (ignoreClasses instanceof RegExp) {
+          removeClasses = removeClasses.concat(classes.match(ignoreClasses));
+        }
         classes = classes.split(/\s+/);
-        // Filter out classes that might represent state.
         classes = _.reject(classes, function (cl) {
-          return /active|enabled|disabled|first|last|only|collapsed|open|clearfix|processed/.test(cl);
+          var removeReg = new RegExp(removeClasses.join('|'));
+          return removeReg.test(cl);
         });
         if (classes.length > 0) {
           return '.' + classes.join('.');

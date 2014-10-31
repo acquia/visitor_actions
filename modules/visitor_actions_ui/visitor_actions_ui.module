@@ -575,6 +575,8 @@ function visitor_actions_ui_visitor_actions_ui_selector_ignore() {
       '[a-zA-Z0-9\_\-]*-processed',
       'quickedit-[a-zA-Z0-9\_]*',
       'visitor-actions-ui[a-zA-Z0-9\_\-]*',
+      'messages',
+      'contextual-links-[a-zA-Z/-/_]*'
     ),
     'ids' => array(
       '^visitorActionsUI-',

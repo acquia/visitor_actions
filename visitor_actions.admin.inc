@@ -108,6 +108,7 @@ function visitor_actions_form($form, &$form_state, $actionable_element = NULL, $
     );
     visitor_actions_get_form_options($actionable_element, $form, FALSE);
   }
+  $form['#visitor_action'] = $action;
   $form['title'] = array(
     '#title' => t('Title'),
     '#description' => t('The administrative title of this action.'),
@@ -145,6 +146,12 @@ function visitor_actions_form($form, &$form_state, $actionable_element = NULL, $
     '#title' => t('Pages'),
     '#default_value' => isset($_GET['path']) ? urldecode($_GET['path']) : (isset($action['pages']) ? $action['pages'] : ''),
     '#description' => t("Specify pages by using their paths or leave blank to apply to all pages. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
+  );
+  $form['advanced']['limited_use'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Limited Use'),
+    '#default_value' => isset($action['limited_use']) ? $action['limited_use'] : 0,
+    '#description' => t("Check this box if the action created should be considered of limited use, meaning it should not show up in lists of available predefined actions to be put to other uses."),
   );
 
   $form['actions'] = array('#type' => 'actions');

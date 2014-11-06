@@ -326,7 +326,8 @@ function visitor_actions_convert_form_values_to_action($values) {
     'pages' => $values['pages'],
     // The data array gets populated with the plugin-specific
     // info for the action.
-    'data' => isset($values['options'][$plugin]) ? $values['options'][$plugin] : array()
+    'data' => isset($values['options'][$plugin]) ? $values['options'][$plugin] : array(),
+    'limited_use' => $values['limited_use']
   );
   return $action;
 }

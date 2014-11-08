@@ -277,10 +277,12 @@ function visitor_actions_match_page($pages, $compare_path = NULL) {
 /**
  * Retrieves all defined actions.
  *
+ * @param boolean $exclude_limited_use
+ *   Whether to exclude custom actions that have been defined as limited use actions.
  * @return
  *   An array of actions.
  */
-function visitor_actions_get_actions() {
+function visitor_actions_get_actions($exclude_limited_use = FALSE) {
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
     $drupal_static_fast['actions'] = &drupal_static(__FUNCTION__, array());
@@ -294,7 +296,7 @@ function visitor_actions_get_actions() {
       $actions += visitor_actions_get_rules();
     }
     // Get all custom actions from the database.
-    $actions += visitor_actions_custom_load_multiple();
+    $actions += visitor_actions_custom_load_multiple(array(), $exclude_limited_use);
   }
 
   return $actions;
@@ -303,17 +305,19 @@ function visitor_actions_get_actions() {
 /**
  * Retrieves all client-side defined actions.
  *
+ * @param boolean $exclude_limited_use
+ *   Whether to exclude custom actions that have been defined as limited use actions.
  * @return
  *   An array of actions.
  */
-function visitor_actions_get_client_side_actions() {
+function visitor_actions_get_client_side_actions($exclude_limited_use = FALSE) {
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
     $drupal_static_fast['actions'] = &drupal_static(__FUNCTION__, array());
   }
   $actions = &$drupal_static_fast['actions'];
   if (empty($actions)) {
-    $all_actions = visitor_actions_get_actions();
+    $all_actions = visitor_actions_get_actions($exclude_limited_use);
     $actions = array_filter($all_actions, create_function('$a', 'return isset($a["client_side"]) && $a["client_side"];'));
   }
   return $actions;
@@ -345,12 +349,24 @@ function visitor_actions_visitor_actions_info() {
 
 /**
  * Retrieves all custom actions that have been set up.
+ *
+ * @param array $names
+ *   An array of action names to constrain the result to.
+ * @param boolean $exclude_limited_use
+ *   Whether to exclude those actions that have been defined as limited use actions.
  */
-function visitor_actions_custom_load_multiple($names = array()) {
+function visitor_actions_custom_load_multiple($names = array(), $exclude_limited_use = FALSE) {
   $custom_actions = array();
   ctools_include('export');
   if (empty($names)) {
     $defaults = ctools_export_load_object('visitor_actions_actions', 'all');
+    if ($exclude_limited_use) {
+      foreach ($defaults as $action_name => $action) {
+        if (isset($action->limited_use) && $action->limited_use) {
+          unset($defaults[$action_name]);
+        }
+      }
+    }
   }
   else {
     $defaults = ctools_export_load_object('visitor_actions_actions', 'names', $names);

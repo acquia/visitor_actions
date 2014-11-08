@@ -109,6 +109,46 @@ class VisitorActionsTest extends DrupalWebTestCase {
     $this->assertText('The selected pages must contain valid paths.');
   }
 
+  function testLimitedUseAction() {
+    $this->drupalLogin($this->adminUser);
+    // Create a link action.
+    $action_name = strtolower($this->randomName());
+    $edit = array(
+      'machine_name' => $action_name,
+      'title' => $this->randomName(),
+      'identifier[link]' => '.some-class',
+      'event[link]' => 'client::click',
+      'pages' => 'node',
+    );
+    $this->drupalPost('admin/structure/visitor_actions/add/link', $edit, t('Save'));
+    $this->resetAll();
+    // The limited use property should be 0.
+    $action = visitor_actions_custom_load($action_name);
+    $this->assertTrue(isset($action['limited_use']));
+    $this->assertFalse($action['limited_use']);
+
+    // Get all actions, excluding limited use ones.
+    $actions = visitor_actions_custom_load_multiple(array(), TRUE);
+    // The action should show up in the list.
+    $this->assertTrue(isset($actions[$action_name]));
+
+    // Now set the action to limited use.
+    $edit = array(
+      'limited_use' => 1
+    );
+    $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
+    $this->resetAll();
+    // The limited use property should be 1.
+    $action = visitor_actions_custom_load($action_name);
+    $this->assertTrue(isset($action['limited_use']));
+    $this->assertTrue($action['limited_use']);
+
+    // Get all actions, excluding limited use ones.
+    $actions = visitor_actions_custom_load_multiple(array(), TRUE);
+    // The action should not show up in the list.
+    $this->assertFalse(isset($actions[$action_name]));
+  }
+
   public function testFormServerSideAction() {
     $this->drupalPost('visitor-actions-test/form-action', array('test' => 'Test'), t('Save'));
     $this->assertText('Test action "base_form" subscriber was fired!');

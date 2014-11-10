@@ -299,9 +299,10 @@ function visitor_actions_form_submit($form, &$form_state) {
     if ($class = ctools_plugin_load_class('visitor_actions', 'actionable_element', $action['plugin'], 'handler')) {
       $action = call_user_func_array(array($class, 'actionPresave'), array($action));
     }
-    visitor_actions_save_action($action);
-    drupal_set_message(t('The action !action was saved.', array('!action' => l($action['label'], "admin/structure/visitor_actions/manage/{$action['machine_name']}/edit"))));
-    $form_state['redirect'] = 'admin/structure/visitor_actions';
+    if (visitor_actions_save_action($action)) {
+      drupal_set_message(t('The action !action was saved.', array('!action' => l($action['label'], "admin/structure/visitor_actions/manage/{$action['machine_name']}/edit"))));
+      $form_state['redirect'] = 'admin/structure/visitor_actions';
+    }
   }
 }
 

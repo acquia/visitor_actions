@@ -354,10 +354,17 @@ function visitor_actions_visitor_actions_info() {
  *   An array of action names to constrain the result to.
  * @param boolean $exclude_limited_use
  *   Whether to exclude those actions that have been defined as limited use actions.
+ * @param boolean $reset
+ *   Whether to reset the cache before loading.
  */
-function visitor_actions_custom_load_multiple($names = array(), $exclude_limited_use = FALSE) {
+function visitor_actions_custom_load_multiple($names = array(), $exclude_limited_use = FALSE, $reset = FALSE) {
   $custom_actions = array();
   ctools_include('export');
+  if ($reset) {
+    // @todo No way to just reset the cache for actions specified in the $names
+    //   param?
+    ctools_export_load_object_reset('visitor_actions_actions');
+  }
   if (empty($names)) {
     $defaults = ctools_export_load_object('visitor_actions_actions', 'all');
     if ($exclude_limited_use) {
@@ -383,12 +390,14 @@ function visitor_actions_custom_load_multiple($names = array(), $exclude_limited
  *
  * @param $name
  *   The name of the action.
+ * @param boolean $reset
+ *   Whether to reset the cache before loading.
  *
  * @return array|null
  *   An array representing the action or NULL if none was found.
  */
-function visitor_actions_custom_load($name) {
-  $actions = visitor_actions_custom_load_multiple(array($name));
+function visitor_actions_custom_load($name, $reset = FALSE) {
+  $actions = visitor_actions_custom_load_multiple(array($name), FALSE, $reset);
   return isset($actions[$name]) ? $actions[$name] : NULL;
 }
 
@@ -457,6 +466,8 @@ function visitor_actions_delete_action($action_name) {
     ->execute();
   module_invoke_all('visitor_actions_delete_action', $action);
   visitor_actions_clear_subscribers($action_name);
+  // Clear the visitor action cache.
+  visitor_actions_custom_load($action_name, TRUE);
 }
 
 /**

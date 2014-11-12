@@ -132,9 +132,9 @@ class VisitorActionsTest extends DrupalWebTestCase {
     // The action should show up in the list.
     $this->assertTrue(isset($actions[$action_name]));
 
-    // Now set the action to limited use.
+    // Now uncheck the reusable checkbox.
     $edit = array(
-      'limited_use' => 1
+      'reusable' => FALSE
     );
     $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
     $this->resetAll();

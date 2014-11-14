@@ -423,6 +423,8 @@ function visitor_actions_unpack_action($record) {
  */
 function visitor_actions_save_action($action) {
   $fields = (array) $action;
+  // Ensure the machine name has only valid characters.
+  $fields['machine_name'] = preg_replace('/[^a-z0-9_]+/', '_', drupal_strtolower($fields['machine_name']));
   $fields += array(
     'module' => 'visitor_actions',
   );

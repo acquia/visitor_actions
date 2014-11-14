@@ -109,6 +109,57 @@ class VisitorActionsTest extends DrupalWebTestCase {
     $this->assertText('The selected pages must contain valid paths.');
   }
 
+  public function testActionCreationAPI() {
+    $action_name = $this->randomName();
+    $machine_name = preg_replace('/[^a-z0-9_]+/', '_', drupal_strtolower($action_name));
+    $action = array(
+      'plugin' => 'link',
+      'label' => $action_name,
+      'machine_name' => $machine_name,
+      'identifier' => '.some-class',
+      'event' => 'client::click',
+      'pages' => 'node',
+      'data' => array(),
+    );
+    $success = visitor_actions_save_action($action);
+    $this->assertTrue($success);
+    $saved = visitor_actions_custom_load($machine_name);
+
+    $this->assertEqual($saved['machine_name'], $machine_name);
+    $this->assertEqual($saved['label'], $action_name);
+    $this->assertEqual($saved['identifier'], '.some-class');
+    $this->assertEqual($saved['event'], 'client::click');
+    $this->assertEqual($saved['pages'], 'node');
+    $this->assertEqual($saved['plugin'], 'link');
+
+    $action_name = $this->randomName();
+    $action_name .= '-invalid$characters';
+    $machine_name_correct = preg_replace('/[^a-z0-9_]+/', '_', drupal_strtolower($action_name));
+
+    $action = array(
+      'plugin' => 'link',
+      'label' => $action_name,
+      'machine_name' => $action_name,
+      'identifier' => '.some-class',
+      'event' => 'client::click',
+      'pages' => 'node',
+      'data' => array(),
+    );
+    $success = visitor_actions_save_action($action);
+    $this->assertTrue($success);
+    // There should be no action with the submitted machine name.
+    $saved = visitor_actions_custom_load($action_name);
+    $this->assertTrue(empty($saved));
+    // The machine name should have been corrected.
+    $saved = visitor_actions_custom_load($machine_name_correct);
+    $this->assertEqual($saved['machine_name'], $machine_name_correct);
+    $this->assertEqual($saved['label'], $action_name);
+    $this->assertEqual($saved['identifier'], '.some-class');
+    $this->assertEqual($saved['event'], 'client::click');
+    $this->assertEqual($saved['pages'], 'node');
+    $this->assertEqual($saved['plugin'], 'link');
+  }
+
   function testLimitedUseAction() {
     $this->drupalLogin($this->adminUser);
     // Create a link action.

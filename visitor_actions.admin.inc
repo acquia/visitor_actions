@@ -151,7 +151,7 @@ function visitor_actions_form($form, &$form_state, $actionable_element = NULL, $
     '#type' => 'checkbox',
     '#title' => t('Reusable'),
     '#default_value' => isset($action['limited_use']) ? !$action['limited_use'] : 1,
-    '#description' => t("Check this box if the action created should be made available for general use."),
+    '#description' => t("Select this check box to make the action available for general use."),
   );
 
   $form['actions'] = array('#type' => 'actions');

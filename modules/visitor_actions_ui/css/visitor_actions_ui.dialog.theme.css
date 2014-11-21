@@ -45,6 +45,8 @@
 .visitor-actions-ui-dialog .visitor-actions-ui-dialog-content form {
   margin: 0;
   padding: 0;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 .visitor-actions-ui-dialog .visitor-actions-ui-dialog-content .form-actions {
   margin-bottom: 0;

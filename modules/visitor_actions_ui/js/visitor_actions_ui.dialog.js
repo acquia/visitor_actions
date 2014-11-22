@@ -91,6 +91,13 @@
         that.position();
       });
 
+      // The rest of this processing is specific to AJAX forms within the
+      // dialog.
+      var formPath = this.model.get('formPath');
+      if (typeof formPath !== 'string' || formPath.length === 0) {
+        return;
+      }
+
       /**
        * Dismisses this instance of ElementDialogView
        */
@@ -150,7 +157,7 @@
 
       // Perform an AJAX request to get a specific form.
       Drupal.ajax[this.anchor.id] = new Drupal.ajax(this.anchor.id, this.anchor, {
-        url: this.model.get('formPath'),
+        url: formPath,
         event: 'formAction.visitorActionsUI.elementDialogView',
         wrapper: that.model.id + '-dialog .visitor-actions-ui-placeholder',
         progress: {
@@ -168,10 +175,7 @@
       });
 
       // Trigger the form load after the dialog has rendered.
-      var formPath = this.model.get('formPath');
-      if (typeof formPath === 'string' && formPath.length > 0) {
-        $('#' + this.anchor.id).trigger('formAction.visitorActionsUI.elementDialogView');
-      }
+      $('#' + this.anchor.id).trigger('formAction.visitorActionsUI.elementDialogView');
     },
 
     /**

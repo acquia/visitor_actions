@@ -422,25 +422,26 @@ function visitor_actions_unpack_action($record) {
  *   An array representing an action.
  */
 function visitor_actions_save_action($action) {
-  $fields = (array) $action;
+  $action = (array) $action;
   // Ensure the machine name has only valid characters.
-  $fields['machine_name'] = preg_replace('/[^a-z0-9_]+/', '_', drupal_strtolower($fields['machine_name']));
-  $fields += array(
+  $action['machine_name'] = preg_replace('/[^a-z0-9_]+/', '_', drupal_strtolower($action['machine_name']));
+  $action += array(
     'module' => 'visitor_actions',
   );
-  if (is_array($fields['data'])) {
-    $fields['data'] = serialize($fields['data']);
+  if (is_array($action['data'])) {
+    $action['data'] = serialize($action['data']);
   }
   try {
     db_merge('visitor_actions_actions')
       ->key(array('machine_name' => $action['machine_name']))
-      ->fields($fields)
+      ->fields($action)
       ->execute();
   }
   catch (Exception $e) {
     drupal_set_message(t('There was a problem saving the visitor action @action_name', array('@action_name' => $action['machine_name'])), 'error');
     return FALSE;
   }
+  module_invoke_all('visitor_actions_save_action', $action);
   return TRUE;
 }
 

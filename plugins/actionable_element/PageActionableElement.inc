@@ -34,7 +34,8 @@ class PageActionableElement extends ActionableElementBase {
         'visible' => array(
           ':input[name="event[page]"]' => array('value' => 'client::stay'),
         ),
-      )
+      ),
+      '#element_validate' => array('element_validate_integer_positive'),
     );
     $form['bottom_offset'] = array(
       '#type' => 'textfield',
@@ -46,8 +47,9 @@ class PageActionableElement extends ActionableElementBase {
       '#states' => array(
         'visible' => array(
           ':input[name="event[page]"]' => array('value' => 'client::scrollToBottom'),
-        )
-      )
+        ),
+      ),
+      '#element_validate' => array('element_validate_integer_positive'),
     );
     return $form;
   }

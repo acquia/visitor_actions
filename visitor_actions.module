@@ -116,15 +116,10 @@ function visitor_actions_form_alter(&$form, &$form_state, $form_id) {
  * Submit callback to fire the 'form_submit' event.
  */
 function visitor_actions_form_submit_callback($form, &$form_state) {
-  $context = $form_state['values'];
-  // Remove unneeded form_values from the context.
-  unset($context['form_token'], $context['form_build_id']);
-  if (isset($context['op'])) {
-    unset($context['op']);
-  }
-  if (isset($context['submit'])) {
-    unset($context['submit']);
-  }
+  $context = array(
+    'form_id' => $form['#form_id'],
+    'path' => $_GET['q']
+  );
   // Trigger event "Submit any form"
   visitor_actions_trigger_event('form_submit', $context);
   // Get all server-side form submit actions that have been added for the given

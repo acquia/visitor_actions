@@ -267,10 +267,9 @@ $.extend(Drupal.visitorActions.ui, {
               return false;
             }
             // Check to see if it is within visitor actions dialog.
-            /*
             if ($(this).parents('.visitor-actions-ui-dialog').length > 0) {
               return false;
-            }*/
+            }
             // Keep the element as the default.
             return true;
           })

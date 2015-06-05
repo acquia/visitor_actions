@@ -145,7 +145,7 @@ function visitor_actions_form($form, &$form_state, $actionable_element = NULL, $
     '#type' => 'textarea',
     '#title' => t('Pages'),
     '#default_value' => isset($_GET['path']) ? urldecode($_GET['path']) : (isset($action['pages']) ? $action['pages'] : ''),
-    '#description' => t("Specify pages by using their paths or leave blank to apply to all pages. Enter one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
+    '#description' => t("Specify pages by using specifying one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
   $form['advanced']['reusable'] = array(
     '#type' => 'checkbox',

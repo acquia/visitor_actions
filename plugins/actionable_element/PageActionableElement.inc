@@ -26,8 +26,8 @@ class PageActionableElement extends ActionableElementBase {
     $form = array();
     $form['remains_for'] = array(
       '#type' => 'textfield',
-      '#title' => t('Time in seconds'),
-      '#description' => t('Enter the time in seconds after which the action should be triggered'),
+      '#title' => t('Trigger action after'),
+      '#field_suffix' => t('seconds'),
       '#size' => 4,
       '#default_value' => isset($action['data']['time']) ? $action['data']['remains_for'] : 5,
       '#states' => array(
@@ -39,9 +39,8 @@ class PageActionableElement extends ActionableElementBase {
     );
     $form['bottom_offset'] = array(
       '#type' => 'textfield',
-      '#title' => t('Offset from bottom'),
-      '#field_suffix' => t('pixels'),
-      '#description' => t('Enter the number of pixels from the bottom that will trigger the action'),
+      '#title' => t('Trigger action when within'),
+      '#field_suffix' => t('pixels of the bottom'),
       '#size' => 4,
       '#default_value' => isset($action['data']['bottom_offset']) ? $action['data']['bottom_offset'] : 100,
       '#states' => array(

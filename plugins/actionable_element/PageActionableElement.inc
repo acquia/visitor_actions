@@ -29,7 +29,7 @@ class PageActionableElement extends ActionableElementBase {
       '#title' => t('Trigger action after'),
       '#field_suffix' => t('seconds'),
       '#size' => 4,
-      '#default_value' => isset($action['data']['time']) ? $action['data']['remains_for'] : 5,
+      '#default_value' => isset($action['data']['remains_for']) ? $action['data']['remains_for'] : 5,
       '#states' => array(
         'visible' => array(
           ':input[name="event[page]"]' => array('value' => 'client::stay'),

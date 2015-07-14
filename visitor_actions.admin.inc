@@ -120,7 +120,7 @@ function visitor_actions_form($form, &$form_state, $actionable_element = NULL, $
 
   $form['machine_name'] = array(
     '#type' => 'machine_name',
-    '#maxlength' => 32,
+    '#maxlength' => 64,
     '#machine_name' => array(
       'exists' => 'visitor_actions_action_name_exists',
       'source' => array('title'),

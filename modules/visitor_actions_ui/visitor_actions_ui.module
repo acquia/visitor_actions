@@ -233,6 +233,7 @@ function visitor_actions_ui_library() {
     'version' => VERSION,
     'js' => array(
       $path . '/js/visitor_actions_ui.selector.js' => array('group' => JS_LIBRARY),
+      $path . '/js/jquery/selectorator.js' => array('group' => JS_LIBRARY),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

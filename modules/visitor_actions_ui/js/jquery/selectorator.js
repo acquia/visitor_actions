@@ -181,7 +181,7 @@
           selector = '*';
         }
         parent = this.element.parent();
-        parentSelector = new Selectorator(parent).generate()[0];
+        parentSelector = new Selectorator(parent, this.options).generate()[0];
         index = parent.children(selector).index(this.element);
         selector = selector + ":eq(" + index + ")";
         if (parentSelector !== '') {
@@ -197,7 +197,7 @@
         }
         tagName = tagName ? this.getProperTagName() : '';
         id = this.element.attr('id');
-        if (typeof id === "string" && !containsRegex(id, this.getIgnore('id')) && id !== '') {
+        if (typeof id === "string" && id !== '' && !containsRegex(id, this.getIgnore('id'))) {
           return [tagName + "#" + (escapeSelector(id))];
         } else {
           return null;
@@ -217,7 +217,7 @@
         invalidClasses = this.getIgnore('class');
         classes = (this.element.attr('class') || '').replace(/\{.*\}/, "").split(/\s/);
         return map(classes, function(klazz) {
-          if (klazz && !containsRegex(klazz, invalidClasses)) {
+          if (klazz && klazz.length > 0 && !containsRegex(klazz, invalidClasses)) {
             return tagName + "." + (escapeSelector(klazz));
           } else {
             return null;
@@ -229,7 +229,7 @@
         var name, tagName;
         tagName = this.getProperTagName();
         name = this.element.attr('name');
-        if (name && !containsRegex(name, this.getIgnore('name'))) {
+        if (name && name.length && !containsRegex(name, this.getIgnore('name'))) {
           return [tagName + "[name='" + name + "']"];
         } else {
           return null;
@@ -241,7 +241,9 @@
         opts = this.options.ignore || {};
         mulkey = key === 'class' ? 'classes' : key + "s";
         vals = opts[key] || opts[mulkey];
-        if (typeof vals === 'string') {
+        if (typeof vals === 'undefined') {
+          return [];
+        } else if (typeof vals === 'string') {
           return [vals];
         } else {
           return vals;

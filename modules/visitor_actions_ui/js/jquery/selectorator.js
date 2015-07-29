@@ -181,7 +181,7 @@
           selector = '*';
         }
         parent = this.element.parent();
-        parentSelector = new Selectorator(parent).generate()[0];
+        parentSelector = new Selectorator(parent, this.options).generate()[0];
         index = parent.children(selector).index(this.element);
         selector = selector + ":eq(" + index + ")";
         if (parentSelector !== '') {

@@ -95,18 +95,43 @@ class VisitorActionsTest extends DrupalWebTestCase {
 
     $this->assertTrue(in_array($action_name, array_keys($va_settings['actions'])));
 
-    // Now edit the action and specify '<front>' as the path.
-    $edit = array(
-      'pages' => '<front>',
+    // Create a node and an alias to the node.
+    $node = $this->drupalCreateNode();
+    $node_path = 'node/' . $node->nid;
+    $alias_path = array(
+      'source' => $node_path,
+      'alias' => 'my_node',
     );
-    $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
-    $this->assertNoText('The selected pages must contain valid paths.');
-    // Now edit the action and specify an invalid path.
-    $edit = array(
-      'pages' => 'some invalid url',
+    path_save($alias_path);
+
+    // Now edit the action and specify valid paths.
+    $valid_path_array = array(
+      '<front>',
+      'node',
+      $node_path,
+      'my_node',
+      'node/*'
     );
-    $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
-    $this->assertText('The selected pages must contain valid paths.');
+    foreach ($valid_path_array as $valid_path) {
+      $edit = array(
+        'pages' => $valid_path,
+      );
+      $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
+      $this->assertNoText('You have specified an invalid path for Pages');
+    }
+
+    // Now edit the action and specify invalid paths.
+    $valid_path_array = array(
+      'some invalid url',
+      'node/1111',
+    );
+    foreach ($valid_path_array as $valid_path) {
+      $edit = array(
+        'pages' => $valid_path,
+      );
+      $this->drupalPost("admin/structure/visitor_actions/manage/$action_name/edit", $edit, t('Save'));
+      $this->assertText('You have specified an invalid path for Pages');
+    }
   }
 
   public function testActionCreationAPI() {

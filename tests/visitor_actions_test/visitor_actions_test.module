@@ -109,11 +109,11 @@ function visitor_actions_test_visitor_actions_info() {
       'pages' => '',
     ),
     // Test fixtures that are specifically for testing pages filters.
-    'node/1' => array(
+    'node/13579' => array(
       'plugin' => 'link',
-      'label' => t('node/1'),
+      'label' => t('node/13579'),
       'client_side' => TRUE,
-      'pages' => 'node/1',
+      'pages' => 'node/13579',
       'identifier' => '.click-test',
       'event' => 'click'
     ),
@@ -125,27 +125,27 @@ function visitor_actions_test_visitor_actions_info() {
       'identifier' => '.click-test',
       'event' => 'click'
     ),
-    'my_node_1' => array(
+    'my_node_13579' => array(
       'plugin' => 'link',
-      'label' => t('my_node_1'),
+      'label' => t('my_node_13579'),
       'client_side' => TRUE,
-      'pages' => 'my_node_1',
+      'pages' => 'my_node_13579',
       'identifier' => '.click-test',
       'event' => 'click'
     ),
-    'fr/node/1' => array(
+    'fr/node/13579' => array(
       'plugin' => 'link',
-      'label' => t('fr/node/1'),
+      'label' => t('fr/node/13579'),
       'client_side' => TRUE,
-      'pages' => 'fr/node/1',
+      'pages' => 'fr/node/13579',
       'identifier' => '.click-test',
       'event' => 'click'
     ),
-    'fr/my_node_1' => array(
+    'fr/my_node_13579' => array(
       'plugin' => 'link',
-      'label' => t('fr/my_node_1'),
+      'label' => t('fr/my_node_13579'),
       'client_side' => TRUE,
-      'pages' => 'fr/my_node_1',
+      'pages' => 'fr/my_node_13579',
       'identifier' => '.click-test',
       'event' => 'click'
     ),

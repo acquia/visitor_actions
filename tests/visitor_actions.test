@@ -33,10 +33,10 @@ class VisitorActionsTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
 
     // Create a node and an alias to the node.
-    $this->drupalCreateNode();
+    $this->drupalCreateNode(array('nid' => 13579, 'is_new' => TRUE));
     $alias_path = array(
-      'source' => 'node/1',
-      'alias' => 'my_node_1',
+      'source' => 'node/13579',
+      'alias' => 'my_node_13579',
     );
     path_save($alias_path);
 
@@ -104,17 +104,17 @@ class VisitorActionsTest extends DrupalWebTestCase {
 
     // This is an iteration of the truth table.
     $expected_action_names_per_page_url_array = array(
-      'node/1' => array(
-        'node/1', 'node/*', 'my_node_1',
+      'node/13579' => array(
+        'node/13579', 'node/*', 'my_node_13579',
       ),
-      'my_node_1' => array(
-        'node/1', 'node/*', 'my_node_1',
+      'my_node_13579' => array(
+        'node/13579', 'node/*', 'my_node_13579',
       ),
-      'fr/node/1' => array(
-        'node/1', 'node/*', 'my_node_1', 'fr/node/1', 'fr/my_node_1',
+      'fr/node/13579' => array(
+        'node/13579', 'node/*', 'my_node_13579', 'fr/node/13579', 'fr/my_node_13579',
       ),
-      'fr/my_node_1' => array(
-        'node/1', 'node/*', 'my_node_1', 'fr/node/1', 'fr/my_node_1',
+      'fr/my_node_13579' => array(
+        'node/13579', 'node/*', 'my_node_13579', 'fr/node/13579', 'fr/my_node_13579',
       ),
     );
 
@@ -158,14 +158,14 @@ class VisitorActionsTest extends DrupalWebTestCase {
     $valid_path_array = array(
       '<front>',
       'node',
-      'node/1',
+      'node/13579',
       'node/*',
-      'fr/node/1',
-      'fr/my_node_1',
+      'fr/node/13579',
+      'fr/my_node_13579',
       'fr/node/*',
-      "fr/node\rmy_node_1",
-      "fr/node\nmy_node_1",
-      "fr/node\r\nmy_node_1",
+      "fr/node\rmy_node_13579",
+      "fr/node\nmy_node_13579",
+      "fr/node\r\nmy_node_13579",
     );
     foreach ($valid_path_array as $valid_path) {
       $edit = array(
@@ -180,9 +180,9 @@ class VisitorActionsTest extends DrupalWebTestCase {
       'some invalid url',
       'node/1111',
       'de/node/*',
-      "fr/node\nsome invalid url",
-      "fr/node\nde/node/*",
-      "fr/node\nnode/1111",
+      "fr/node/13579\nsome invalid url",
+      "fr/node/13579\nde/node/*",
+      "fr/node/13579\nnode/1111",
     );
     foreach ($valid_path_array as $valid_path) {
       $edit = array(

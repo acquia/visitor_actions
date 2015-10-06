@@ -148,7 +148,7 @@ function visitor_actions_form($form, &$form_state, $actionable_element = NULL, $
     '#allow_dynamic' => TRUE,
     '#allow_external' => FALSE,
     '#default_value' => isset($_GET['path']) ? urldecode($_GET['path']) : (isset($action['pages']) ? $action['pages'] : ''),
-    '#description' => t("Specify pages by using specifying one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page. If the URL's language prefix is skipped, all languages of the same URL will be selected.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
+    '#description' => t("Specify pages by using one path per line. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page. If the URL's language prefix is skipped, all languages of the same URL will be selected.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>')),
   );
   $form['advanced']['reusable'] = array(
     '#type' => 'checkbox',

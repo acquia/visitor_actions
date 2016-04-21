@@ -88,17 +88,15 @@ function visitor_actions_user_login(&$edit, $account) {
   $context = (array) $account;
   unset($context['access'], $context['init'], $context['pass']);
   visitor_actions_trigger_event('user_login', $context);
-  if (drupal_static('visitor_actions_user_insert')) {
-    visitor_actions_trigger_event('user_register', $context);
-  }
 }
 
 /**
  * Implements hook_user_insert().
  */
 function visitor_actions_user_insert(&$edit, $account, $category) {
-  $is_new = &drupal_static(__FUNCTION__, TRUE);
-  return $is_new;
+  $context = (array) $account;
+  unset($context['access'], $context['init'], $context['pass']);
+  visitor_actions_trigger_event('user_register', $context);
 }
 
 /**
